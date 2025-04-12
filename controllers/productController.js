@@ -1,33 +1,39 @@
 const Product = require('../models/Product');
-const asyncHandler = require('express-async-handler');
 
-// @desc    Get all products
-// @route   GET /api/products
-// @access  Public
-const getProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find()
-    .populate('farmer', 'name email')
-    .lean();
-  res.json(products);
-});
+exports.createProduct = async (req, res) => {
+  try {
+    const { farmerId, title, description, category, price, stock, unit } = req.body;
+    const product = new Product({ farmerId, title, description, category, price, stock, unit });
+    await product.save();
+    res.status(201).json(product);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
-// @desc    Create product
-// @route   POST /api/products
-// @access  Farmer
-const createProduct = asyncHandler(async (req, res) => {
-  const { title, price, unit, category, stock } = req.body;
-  
-  const product = new Product({
-    farmer: req.session.userId,
-    title,
-    price,
-    unit,
-    category,
-    stock
-  });
+exports.getAllProducts = async (req, res) => {
+  try {
+    const products = await Product.find().populate('farmerId', 'fullName');
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
-  await product.save();
-  res.status(201).json(product);
-});
+exports.updateProduct = async (req, res) => {
+  try {
+    const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(product);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
-module.exports = { getProducts, createProduct };
+exports.deleteProduct = async (req, res) => {
+  try {
+    await Product.findByIdAndDelete(req.params.id);
+    res.status(204).send();
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

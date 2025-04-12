@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .panel-section {
+            margin-bottom: 40px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin Panel</h1>
+
+    <!-- User Management -->
+    <div class="panel-section" id="user-management">
+        <h2>Manage Users</h2>
+        <form id="user-form">
+            <input type="email" id="user-email" placeholder="Email" required>
+            <input type="password" id="user-password" placeholder="Password" required>
+            <input type="text" id="user-fullName" placeholder="Full Name" required>
+            <select id="user-type">
+                <option value="user">User</option>
+                <option value="farmer">Farmer</option>
+                <option value="admin">Admin</option>
+            </select>
+            <input type="text" id="user-phone" placeholder="Phone">
+            <select id="user-city">
+                <option value="">Select City</option>
+                <option value="Tirana">Tirana</option>
+                <option value="Durrës">Durrës</option>
+                <!-- Add other cities as needed -->
+            </select>
+            <button type="submit">Add User</button>
+        </form>
+
+        <table id="user-table">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Full Name</th>
+                    <th>Type</th>
+                    <th>City</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Users will be listed here -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Product Management -->
+    <div class="panel-section" id="product-management">
+        <h2>Manage Products</h2>
+        <form id="product-form">
+            <input type="text" id="product-title" placeholder="Title" required>
+            <textarea id="product-description" placeholder="Description"></textarea>
+            <select id="product-category">
+                <option value="fruits">Fruits</option>
+                <option value="vegetables">Vegetables</option>
+                <option value="grains">Grains</option>
+                <option value="dairy">Dairy</option>
+                <option value="meat">Meat</option>
+                <option value="other">Other</option>
+            </select>
+            <input type="number" id="product-price" placeholder="Price" required>
+            <select id="product-unit">
+                <option value="kg">Kg</option>
+                <option value="piece">Piece</option>
+            </select>
+            <button type="submit">Add Product</button>
+        </form>
+
+        <table id="product-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Unit</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Products will be listed here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Setting up API URLs
+        const apiBaseUrl = '/api/admin/';
+
+        // Fetch and display users
+        function loadUsers() {
+            fetch(apiBaseUrl + 'users')
+                .then(response => response.json())
+                .then(users => displayUsers(users))
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Fetch and display products
+        function loadProducts() {
+            fetch(apiBaseUrl + 'products')
+                .then(response => response.json())
+                .then(products => displayProducts(products))
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Display users in the table
+        function displayUsers(users) {
+            const userTableBody = document.querySelector('#user-table tbody');
+            userTableBody.innerHTML = '';
+
+            users.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.email}</td>
+                    <td>${user.fullName}</td>
+                    <td>${user.type}</td>
+                    <td>${user.city || 'N/A'}</td>
+                    <td>
+                        <button onclick="deleteUser('${user._id}')">Delete</button>
+                    </td>
+                `;
+                userTableBody.appendChild(row);
+            });
+        }
+
+        // Display products in the table
+        function displayProducts(products) {
+            const productTableBody = document.querySelector('#product-table tbody');
+            productTableBody.innerHTML = '';
+
+            products.forEach(product => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${product.title}</td>
+                    <td>${product.category}</td>
+                    <td>${product.price}</td>
+                    <td>${product.unit}</td>
+                    <td>
+                        <button onclick="deleteProduct('${product._id}')">Delete</button>
+                    </td>
+                `;
+                productTableBody.appendChild(row);
+            });
+        }
+
+        // Add a new user
+        document.getElementById('user-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const user = {
+                email: document.getElementById('user-email').value,
+                password: document.getElementById('user-password').value,
+                fullName: document.getElementById('user-fullName').value,
+                type: document.getElementById('user-type').value,
+                phone: document.getElementById('user-phone').value,
+                city: document.getElementById('user-city').value
+            };
+
+            fetch(apiBaseUrl + 'users', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(user)
+            })
+            .then(response => response.json())
+            .then(() => loadUsers())
+            .catch(error => console.error('Error:', error));
+        });
+
+        // Add a new product
+        document.getElementById('product-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const product = {
+                title: document.getElementById('product-title').value,
+                description: document.getElementById('product-description').value,
+                category: document.getElementById('product-category').value,
+                price: parseFloat(document.getElementById('product-price').value),
+                unit: document.getElementById('product-unit').value
+            };
+
+            fetch(apiBaseUrl + 'products', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(product)
+            })
+            .then(response => response.json())
+            .then(() => loadProducts())
+            .catch(error => console.error('Error:', error));
+        });
+
+        // Delete a user
+        function deleteUser(userId) {
+            fetch(apiBaseUrl + 'users/' + userId, {
+                method: 'DELETE'
+            })
+            .then(() => loadUsers())
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Delete a product
+        function deleteProduct(productId) {
+            fetch(apiBaseUrl + 'products/' + productId, {
+                method: 'DELETE'
+            })
+            .then(() => loadProducts())
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Initial load
+        loadUsers();
+        loadProducts();
+    </script>
+</body>
+</html>
