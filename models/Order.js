@@ -21,8 +21,12 @@ const orderSchema = new Schema({
   totalPrice: { type: Number, required: true },
   status: { 
     type: String, 
-    enum: ['pending', 'accepted', 'rejected', 'completed'],
+    enum: ['pending', 'accepted', 'rejected', 'completed', 'cancelled'],
     default: 'pending'
+  },
+  isReviewed: {
+    type: Boolean,
+    default: false
   }
 }, { timestamps: true });
 

@@ -93,9 +93,25 @@
     </div>
 
     <script>
-        const apiUrl = '/api/products'; // Adjust if your API has a different URL
-
-        // Fetch and display products based on filters and sort
+        let currentUser = null;
+    
+        // Get current user
+        async function fetchCurrentUser() {
+            const res = await fetch('/api/auth/me');
+            if (res.status === 200) {
+                currentUser = await res.json();
+            } else {
+                alert("Please log in to send inquiries.");
+            }
+        }
+    
+        window.onload = () => {
+            fetchCurrentUser();
+            fetchProducts(); // auto-load default list
+        };
+    
+        const apiUrl = '/api/products';
+    
         function fetchProducts() {
             const search_title = document.getElementById('search_title').value;
             const category = document.getElementById('category').value;
@@ -103,11 +119,9 @@
             const city = document.getElementById('city').value;
             const sort_by = document.getElementById('sort_by').value;
             const sort_order = document.getElementById('sort_order').value;
-
-            // Build query parameters
+    
             let query = `?category=${category}&in_stock=${in_stock}&city=${city}&sort_by=${sort_by}&sort_order=${sort_order}&search_title=${search_title}`;
-
-            // Send the GET request to the backend
+    
             fetch(apiUrl + query)
                 .then(response => response.json())
                 .then(products => displayProducts(products))
@@ -116,21 +130,24 @@
                     alert('An error occurred while fetching products');
                 });
         }
-
-        // Display products in the list
+    
         function displayProducts(products) {
             const productList = document.getElementById('product-list');
-            productList.innerHTML = ''; // Clear existing products
-
+            productList.innerHTML = '';
+    
             if (products.length === 0) {
                 productList.innerHTML = '<p>No products found based on your filters.</p>';
                 return;
             }
-
-            // Loop through the products and display them
+    
             products.forEach(product => {
                 const productElement = document.createElement('div');
                 productElement.classList.add('product-item');
+    
+                const productId = product._id;
+                const farmerId = product.farmerId._id;
+                const price = product.price;
+    
                 productElement.innerHTML = `
                     <h3>${product.title}</h3>
                     <p><strong>Category:</strong> ${product.category}</p>
@@ -139,10 +156,53 @@
                     <p><strong>Farmer:</strong> ${product.farmerId.fullName}</p>
                     <p><strong>City:</strong> ${product.farmerId.city}</p>
                     <p><strong>Rating:</strong> ${product.total_rating} (Reviews: ${product.review_count})</p>
+                    
+                    <label for="qty-${productId}">Quantity:</label>
+                    <input type="number" id="qty-${productId}" min="1" value="1" style="width: 50px;" />
+                    <button onclick="sendInquiry('${productId}', '${farmerId}', ${price}, 'qty-${productId}')">Send Inquiry</button>
                 `;
+    
                 productList.appendChild(productElement);
             });
         }
+    
+        async function sendInquiry(productId, farmerId, productPrice, quantityInputId) {
+            if (!currentUser) {
+                return alert("Please log in to send inquiries.");
+            }
+    
+            const quantity = parseInt(document.getElementById(quantityInputId).value);
+            if (isNaN(quantity) || quantity <= 0) {
+                return alert("Please enter a valid quantity.");
+            }
+    
+            const totalPrice = quantity * productPrice;
+    
+            try {
+                const res = await fetch('/api/inquiries', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user: currentUser._id,
+                        farmer: farmerId,
+                        product: productId,
+                        quantity,
+                        totalPrice
+                    })
+                });
+    
+                if (res.ok) {
+                    alert("Inquiry sent successfully!");
+                } else {
+                    const err = await res.json();
+                    alert("Error: " + (err.message || "Could not send inquiry."));
+                }
+            } catch (err) {
+                console.error("Inquiry Error", err);
+                alert("Unexpected error. Please try again.");
+            }
+        }
     </script>
+    
 </body>
 </html>

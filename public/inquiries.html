@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Farmer Connect</title>
+  <link rel="stylesheet" href="css/inquiries.css" />
+</head>
+<body>
+  <div class="main-container">
+    <div class="sidebar">
+      <div class="tabs">
+        <button class="tab active" id="tab-inquiries">Inquiries</button>
+        <button class="tab" id="tab-dms">DMs</button>
+      </div>
+      <div class="farmer-list" id="farmerList">
+        <!-- Farmers will render here -->
+      </div>
+    </div>
+
+    <div class="chat-container">
+      <div class="messages" id="messages">
+        <!-- Messages will load here -->
+      </div>
+      <div class="message-input">
+        <input type="text" id="messageText" placeholder="Shkruaj ketu..." />
+        <button id="sendMessage">➤</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/inquiries.js"></script>
+</body>
+</html>
