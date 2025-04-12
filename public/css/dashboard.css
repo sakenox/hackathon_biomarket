@@ -1,0 +1,17 @@
+.product-table {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .product-table th {
+    font-weight: 600;
+  }
+  
+  .product-table tr:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .action-buttons {
+    white-space: nowrap;
+  }

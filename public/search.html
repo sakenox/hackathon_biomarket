@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        select, button, input {
+            margin: 10px 0;
+        }
+        .product-list {
+            margin-top: 20px;
+        }
+        .product-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .product-item h3 {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Product Search</h1>
+
+    <form id="filter-form">
+        <label for="search_title">Search by Title:</label>
+        <input type="text" id="search_title" placeholder="Search products by title">
+
+        <br><br>
+
+        <label for="category">Category:</label>
+        <select id="category">
+            <option value="">All</option>
+            <option value="fruits">Fruits</option>
+            <option value="vegetables">Vegetables</option>
+            <option value="grains">Grains</option>
+            <option value="dairy">Dairy</option>
+            <option value="meat">Meat</option>
+            <option value="other">Other</option>
+        </select>
+
+        <label for="in_stock">In Stock:</label>
+        <select id="in_stock">
+            <option value="">All</option>
+            <option value="true">In Stock</option>
+            <option value="false">Out of Stock</option>
+        </select>
+
+        <label for="city">City:</label>
+        <select id="city">
+            <option value="">All</option>
+            <option value="Tirana">Tirana</option>
+            <option value="Durrës">Durrës</option>
+            <option value="Vlorë">Vlorë</option>
+            <option value="Shkodër">Shkodër</option>
+            <option value="Elbasan">Elbasan</option>
+            <option value="Korçë">Korçë</option>
+            <option value="Fier">Fier</option>
+            <option value="Berat">Berat</option>
+            <option value="Lushnjë">Lushnjë</option>
+            <option value="Pogradec">Pogradec</option>
+        </select>
+
+        <br><br>
+
+        <label for="sort_by">Sort By:</label>
+        <select id="sort_by">
+            <option value="">None</option>
+            <option value="price">Price</option>
+            <option value="review_count">Review Count</option>
+            <option value="total_rating">Rating</option>
+        </select>
+
+        <label for="sort_order">Order:</label>
+        <select id="sort_order">
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+        </select>
+
+        <button type="button" onclick="fetchProducts()">Search</button>
+    </form>
+
+    <div class="product-list" id="product-list">
+        <!-- Products will be displayed here -->
+    </div>
+
+    <script>
+        const apiUrl = '/api/products'; // Adjust if your API has a different URL
+
+        // Fetch and display products based on filters and sort
+        function fetchProducts() {
+            const search_title = document.getElementById('search_title').value;
+            const category = document.getElementById('category').value;
+            const in_stock = document.getElementById('in_stock').value;
+            const city = document.getElementById('city').value;
+            const sort_by = document.getElementById('sort_by').value;
+            const sort_order = document.getElementById('sort_order').value;
+
+            // Build query parameters
+            let query = `?category=${category}&in_stock=${in_stock}&city=${city}&sort_by=${sort_by}&sort_order=${sort_order}&search_title=${search_title}`;
+
+            // Send the GET request to the backend
+            fetch(apiUrl + query)
+                .then(response => response.json())
+                .then(products => displayProducts(products))
+                .catch(error => {
+                    console.error('Error fetching products:', error);
+                    alert('An error occurred while fetching products');
+                });
+        }
+
+        // Display products in the list
+        function displayProducts(products) {
+            const productList = document.getElementById('product-list');
+            productList.innerHTML = ''; // Clear existing products
+
+            if (products.length === 0) {
+                productList.innerHTML = '<p>No products found based on your filters.</p>';
+                return;
+            }
+
+            // Loop through the products and display them
+            products.forEach(product => {
+                const productElement = document.createElement('div');
+                productElement.classList.add('product-item');
+                productElement.innerHTML = `
+                    <h3>${product.title}</h3>
+                    <p><strong>Category:</strong> ${product.category}</p>
+                    <p><strong>Price:</strong> $${product.price}</p>
+                    <p><strong>Stock:</strong> ${product.stock ? 'In Stock' : 'Out of Stock'}</p>
+                    <p><strong>Farmer:</strong> ${product.farmerId.fullName}</p>
+                    <p><strong>City:</strong> ${product.farmerId.city}</p>
+                    <p><strong>Rating:</strong> ${product.total_rating} (Reviews: ${product.review_count})</p>
+                `;
+                productList.appendChild(productElement);
+            });
+        }
+    </script>
+</body>
+</html>
