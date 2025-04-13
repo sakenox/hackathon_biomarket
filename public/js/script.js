@@ -11,12 +11,12 @@ import { sortProducts } from './utils/sort.js';
 // Data configuration
 const APP_DATA = {
   categories: [
-    { title: 'Fresh Fruit', image: 'fruit.png' },
-    { title: 'Fresh Vegetables', image: 'vegetables.png' },
-    { title: 'Meat & Fish', image: 'meat.png' },
-    { title: 'Bakery', image: 'bakery.png' },
-    { title: 'Dairy Products', image: 'dairy.png' },
-    { title: 'Beverages', image: 'beverages.png' }
+    { title: 'Fresh Fruit', image: '../assets/images/fruits.jpg' },
+    { title: 'Fresh Vegetables', image: '../assets/images/vegetables.png' },
+    { title: 'Meat & Fish', image: '../assets/images/meat.png' },
+    { title: 'Bakery', image: '../assets/images/bakery.png' },
+    { title: 'Dairy Products', image: '../assets/images/dairy.png' },
+    { title: 'Beverages', image: '../assets/images/beverages.png' }
   ],
   
   products: [
@@ -129,25 +129,121 @@ const loadProducts = async () => {
   try {
     const response = await fetch('/api/products/');
     const products = await response.json();
-    console.log('Loaded products:', products);
+
     const productsDiv = document.getElementById('products');
     if (productsDiv) {
-      productsDiv.innerHTML = products.map(product => `
-        <div class="col-md-4 mb-4">
-          <div class="card h-100">
-            <div class="card-body">
-              <h5 class="card-title">${product.title}</h5>
-              <p class="card-text">${product.description || ''}</p>
-              <div class="d-flex justify-content-between">
-                <span>$${product.price}/${product.unit || 'unit'}</span>
+      productsDiv.innerHTML = `
+        <style>
+          .custom-product-card {
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            padding: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+          }
+
+          .custom-product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+          }
+
+          .custom-product-image {
+            width: 110px;
+            height: 110px;
+            object-fit: contain;
+            margin-bottom: 1rem;
+          }
+
+          .custom-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            font-size: 0.75rem;
+            padding: 0.35rem 0.6rem;
+          }
+
+          .custom-product-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+          }
+
+          .custom-price {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #28a745;
+          }
+
+          .custom-old-price {
+            font-size: 0.875rem;
+            color: #888;
+            margin-left: 0.5rem;
+          }
+
+          .custom-rating {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #f0ad4e;
+          }
+
+          .custom-description,
+          .custom-unit {
+            font-size: 0.8rem;
+            color: #777;
+            margin-top: 0.3rem;
+          }
+        </style>
+
+        <div class="container py-5 px-3">
+          <h3 class="fw-bold mb-4">Featured Products</h3>
+          <div class="row gy-4 gx-4">
+            ${products.map(product => `
+              <div class="col-6 col-md-4 col-lg-3">
+                <div class="custom-product-card">
+                  ${product.isOnSale ? 
+                    `<span class="badge bg-danger custom-badge">Sale</span>` : ''
+                  }
+                  <img src="${product.image}" alt="${product.title}" class="custom-product-image">
+                  <div class="custom-product-title">${product.title}</div>
+                  <div>
+                    <span class="custom-price">$${product.price.toFixed(2)}</span>
+                    ${product.originalPrice ? 
+                      `<del class="custom-old-price">$${product.originalPrice.toFixed(2)}</del>` : ''
+                    }
+                  </div>
+                  <div class="custom-rating">
+                    ${'★'.repeat(product.rating || 0)}${'☆'.repeat(5 - (product.rating || 0))}
+                  </div>
+                  ${product.description ? 
+                    `<p class="custom-description">${product.description}</p>` : ''
+                  }
+                  ${product.unit ?
+                    `<div class="custom-unit">Per ${product.unit}</div>` : ''
+                  }
+                </div>
               </div>
-            </div>
+            `).join('')}
           </div>
         </div>
-      `).join('');
+      `;
     }
   } catch (err) {
     console.error('Error loading products:', err);
+    const productsDiv = document.getElementById('products');
+    if (productsDiv) {
+      productsDiv.innerHTML = `
+        <div class="alert alert-danger text-center">
+          Failed to load products. Please try again later.
+        </div>
+      `;
+    }
   }
 };
 

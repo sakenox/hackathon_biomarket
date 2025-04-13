@@ -1,43 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Search</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-        select, button, input {
-            margin: 10px 0;
-        }
-        .product-list {
-            margin-top: 20px;
-        }
-        .product-item {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-        }
-        .product-item h3 {
-            margin: 0;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fresh Market - Find Your Perfect Product</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"/>
+  <link rel="stylesheet" href="assets/css/style.css"/>
+  <style>
+    :root {
+      --primary-color: rgb(25, 135, 84);
+      --secondary-color: #6c757d;
+    }
+
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .page-header {
+      background: linear-gradient(135deg, var(--primary-color), #28a745);
+      color: white;
+      padding: 3rem 0;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .filter-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      padding: 1rem 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .filter-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: flex-end;
+    }
+
+    .filter-form .form-group {
+      flex: 1 1 160px;
+      margin-bottom: 0;
+    }
+
+    .filter-form .form-group label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--secondary-color);
+      margin-bottom: 0.25rem;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.4rem 0.6rem;
+      font-size: 0.875rem;
+      border: 1px solid #ced4da;
+      border-radius: 6px;
+      transition: all 0.3s;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.25);
+    }
+
+    .btn-search {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      height: calc(100% - 0.25rem);
+    }
+
+    .btn-search:hover {
+      background-color: #218838;
+      transform: translateY(-1px);
+    }
+
+    .product-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      padding: 1.5rem;
+      transition: all 0.3s;
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+    }
+
+    .product-card h3 {
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+      font-size: 1.25rem;
+    }
+
+    .product-card p {
+      margin-bottom: 0.5rem;
+      color: var(--secondary-color);
+    }
+
+    .product-card .price {
+      font-weight: 600;
+      color: #212529;
+      font-size: 1.1rem;
+    }
+
+    .rating {
+      color: #ffc107;
+      margin-right: 0.5rem;
+    }
+
+    .no-products {
+      text-align: center;
+      padding: 2rem;
+      color: var(--secondary-color);
+      grid-column: 1 / -1;
+    }
+
+    .inquiry-form {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid #eee;
+    }
+
+    .inquiry-form label {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-size: 0.8rem;
+    }
+
+    .inquiry-form input {
+      width: 60px;
+      padding: 0.25rem;
+      margin-right: 0.5rem;
+    }
+
+    .btn-inquiry {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.25rem 0.75rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+    }
+
+    @media (max-width: 768px) {
+      .filter-form {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .btn-search {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
+  <header id="navbar"></header>
 
-    <h1>Product Search</h1>
+  <div class="page-header">
+    <div class="container">
+      <h1 class="display-4">Find Your Perfect Product</h1>
+      <p class="lead">Browse our fresh selection of farm products</p>
+    </div>
+  </div>
 
-    <form id="filter-form">
-        <label for="search_title">Search by Title:</label>
-        <input type="text" id="search_title" placeholder="Search products by title">
+  <main class="container">
+    <div class="filter-card">
+      <form id="filter-form" class="filter-form">
+        <div class="form-group">
+          <label for="search_title">Search</label>
+          <input type="text" id="search_title" class="form-control" placeholder="Product name...">
+        </div>
 
-        <br><br>
-
-        <label for="category">Category:</label>
-        <select id="category">
+        <div class="form-group">
+          <label for="category">Category</label>
+          <select id="category" class="form-control">
             <option value="">All</option>
             <option value="fruits">Fruits</option>
             <option value="vegetables">Vegetables</option>
@@ -45,17 +201,21 @@
             <option value="dairy">Dairy</option>
             <option value="meat">Meat</option>
             <option value="other">Other</option>
-        </select>
+          </select>
+        </div>
 
-        <label for="in_stock">In Stock:</label>
-        <select id="in_stock">
+        <div class="form-group">
+          <label for="in_stock">Stock</label>
+          <select id="in_stock" class="form-control">
             <option value="">All</option>
             <option value="true">In Stock</option>
             <option value="false">Out of Stock</option>
-        </select>
+          </select>
+        </div>
 
-        <label for="city">City:</label>
-        <select id="city">
+        <div class="form-group">
+          <label for="city">City</label>
+          <select id="city" class="form-control">
             <option value="">All</option>
             <option value="Tirana">Tirana</option>
             <option value="Durrës">Durrës</option>
@@ -67,142 +227,156 @@
             <option value="Berat">Berat</option>
             <option value="Lushnjë">Lushnjë</option>
             <option value="Pogradec">Pogradec</option>
-        </select>
+          </select>
+        </div>
 
-        <br><br>
-
-        <label for="sort_by">Sort By:</label>
-        <select id="sort_by">
-            <option value="">None</option>
+        <div class="form-group">
+          <label for="sort_by">Sort By</label>
+          <select id="sort_by" class="form-control">
+            <option value="">Default</option>
             <option value="price">Price</option>
-            <option value="review_count">Review Count</option>
+            <option value="review_count">Reviews</option>
             <option value="total_rating">Rating</option>
-        </select>
+          </select>
+        </div>
 
-        <label for="sort_order">Order:</label>
-        <select id="sort_order">
-            <option value="asc">Ascending</option>
-            <option value="desc">Descending</option>
-        </select>
+        <div class="form-group">
+          <label for="sort_order">Order</label>
+          <select id="sort_order" class="form-control">
+            <option value="asc">Asc</option>
+            <option value="desc">Desc</option>
+          </select>
+        </div>
 
-        <button type="button" onclick="fetchProducts()">Search</button>
-    </form>
-
-    <div class="product-list" id="product-list">
-        <!-- Products will be displayed here -->
+        <button type="button" class="btn-search" onclick="fetchProducts()">
+          <i class="bi bi-search"></i> Search
+        </button>
+      </form>
     </div>
 
-    <script>
-        let currentUser = null;
+    <div class="product-list" id="product-list">
+      <!-- Products will be shown here -->
+    </div>
+  </main>
+
+  <footer id="footer"></footer>
+
+  <script>
+    let currentUser = null;
     
-        // Get current user
-        async function fetchCurrentUser() {
-            const res = await fetch('/api/auth/me');
-            if (res.status === 200) {
-                currentUser = await res.json();
-            } else {
-                alert("Please log in to send inquiries.");
-            }
+    // Get current user
+    async function fetchCurrentUser() {
+        const res = await fetch('/api/auth/me');
+        if (res.status === 200) {
+            currentUser = await res.json();
         }
-    
-        window.onload = () => {
-            fetchCurrentUser();
-            fetchProducts(); // auto-load default list
-        };
-    
-        const apiUrl = '/api/products';
-    
-        function fetchProducts() {
-            const search_title = document.getElementById('search_title').value;
-            const category = document.getElementById('category').value;
-            const in_stock = document.getElementById('in_stock').value;
-            const city = document.getElementById('city').value;
-            const sort_by = document.getElementById('sort_by').value;
-            const sort_order = document.getElementById('sort_order').value;
-    
-            let query = `?category=${category}&in_stock=${in_stock}&city=${city}&sort_by=${sort_by}&sort_order=${sort_order}&search_title=${search_title}`;
-    
-            fetch(apiUrl + query)
-                .then(response => response.json())
-                .then(products => displayProducts(products))
-                .catch(error => {
-                    console.error('Error fetching products:', error);
-                    alert('An error occurred while fetching products');
-                });
-        }
-    
-        function displayProducts(products) {
-            const productList = document.getElementById('product-list');
-            productList.innerHTML = '';
-    
-            if (products.length === 0) {
-                productList.innerHTML = '<p>No products found based on your filters.</p>';
-                return;
-            }
-    
-            products.forEach(product => {
-                const productElement = document.createElement('div');
-                productElement.classList.add('product-item');
-    
-                const productId = product._id;
-                const farmerId = product.farmerId._id;
-                const price = product.price;
-    
-                productElement.innerHTML = `
-                    <h3>${product.title}</h3>
-                    <p><strong>Category:</strong> ${product.category}</p>
-                    <p><strong>Price:</strong> $${product.price}</p>
-                    <p><strong>Stock:</strong> ${product.stock ? 'In Stock' : 'Out of Stock'}</p>
-                    <p><strong>Farmer:</strong> ${product.farmerId.fullName}</p>
-                    <p><strong>City:</strong> ${product.farmerId.city}</p>
-                    <p><strong>Rating:</strong> ${product.total_rating} (Reviews: ${product.review_count})</p>
-                    
-                    <label for="qty-${productId}">Quantity:</label>
-                    <input type="number" id="qty-${productId}" min="1" value="1" style="width: 50px;" />
-                    <button onclick="sendInquiry('${productId}', '${farmerId}', ${price}, 'qty-${productId}')">Send Inquiry</button>
-                `;
-    
-                productList.appendChild(productElement);
-            });
-        }
-    
-        async function sendInquiry(productId, farmerId, productPrice, quantityInputId) {
-            if (!currentUser) {
-                return alert("Please log in to send inquiries.");
-            }
-    
-            const quantity = parseInt(document.getElementById(quantityInputId).value);
-            if (isNaN(quantity) || quantity <= 0) {
-                return alert("Please enter a valid quantity.");
-            }
-    
-            const totalPrice = quantity * productPrice;
-    
-            try {
-                const res = await fetch('/api/inquiries', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        user: currentUser._id,
-                        farmer: farmerId,
-                        product: productId,
-                        quantity,
-                        totalPrice
-                    })
-                });
-    
-                if (res.ok) {
-                    alert("Inquiry sent successfully!");
-                } else {
-                    const err = await res.json();
-                    alert("Error: " + (err.message || "Could not send inquiry."));
-                }
-            } catch (err) {
-                console.error("Inquiry Error", err);
-                alert("Unexpected error. Please try again.");
-            }
-        }
-    </script>
-    
+    }
+
+    window.onload = () => {
+        fetchCurrentUser();
+        fetchProducts(); // auto-load default list
+    };
+
+    const apiUrl = '/api/products';
+
+    function fetchProducts() {
+      const search_title = document.getElementById('search_title').value;
+      const category = document.getElementById('category').value;
+      const in_stock = document.getElementById('in_stock').value;
+      const city = document.getElementById('city').value;
+      const sort_by = document.getElementById('sort_by').value;
+      const sort_order = document.getElementById('sort_order').value;
+
+      const query = `?category=${category}&in_stock=${in_stock}&city=${city}&sort_by=${sort_by}&sort_order=${sort_order}&search_title=${search_title}`;
+
+      fetch(apiUrl + query)
+        .then(res => res.json())
+        .then(data => displayProducts(data))
+        .catch(err => {
+          console.error('Error:', err);
+          alert('Something went wrong while fetching products.');
+        });
+    }
+
+    function displayProducts(products) {
+      const productList = document.getElementById('product-list');
+      productList.innerHTML = '';
+
+      if (products.length === 0) {
+        productList.innerHTML = '<div class="no-products"><i class="bi bi-exclamation-circle" style="font-size: 2rem;"></i><p class="mt-3">No products found matching your criteria.</p></div>';
+        return;
+      }
+
+      products.forEach(product => {
+        const el = document.createElement('div');
+        el.classList.add('product-card');
+        
+        const productId = product._id;
+        const farmerId = product.farmerId._id;
+        const price = product.price;
+        
+        el.innerHTML = `
+          <h3>${product.title}</h3>
+          <p><strong>Category:</strong> ${product.category}</p>
+          <p class="price"><strong>Price:</strong> $${product.price}</p>
+          <p><strong>Stock:</strong> ${product.stock ? '<span class="text-success">In Stock</span>' : '<span class="text-danger">Out of Stock</span>'}</p>
+          <p><strong>Farmer:</strong> ${product.farmerId.fullName}</p>
+          <p><strong>City:</strong> ${product.farmerId.city}</p>
+          <p><strong>Rating:</strong> <span class="rating">${'★'.repeat(Math.round(product.total_rating))}${'☆'.repeat(5 - Math.round(product.total_rating))}</span> 
+          (${product.review_count} reviews)</p>
+          
+          <div class="inquiry-form d-flex align-items-center gap-2 mt-3">
+            <label for="qty-${productId}" class="mb-0">Quantity:</label>
+            <input type="number" id="qty-${productId}" min="1" value="1" class="form-control form-control-sm w-auto" style="max-width: 80px;">
+            <button class="btn btn-success btn-sm" onclick="sendInquiry('${productId}', '${farmerId}', ${price}, 'qty-${productId}')">
+                Send Inquiry
+            </button>
+           </div>
+
+        `;
+        productList.appendChild(el);
+      });
+    }
+
+    async function sendInquiry(productId, farmerId, productPrice, quantityInputId) {
+      if (!currentUser) {
+        return alert("Please log in to send inquiries.");
+      }
+  
+      const quantity = parseInt(document.getElementById(quantityInputId).value);
+      if (isNaN(quantity) || quantity <= 0) {
+        return alert("Please enter a valid quantity.");
+      }
+  
+      const totalPrice = quantity * productPrice;
+  
+      try {
+          const res = await fetch('/api/inquiries', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                  user: currentUser._id,
+                  farmer: farmerId,
+                  product: productId,
+                  quantity,
+                  totalPrice
+              })
+          });
+  
+          if (res.ok) {
+              alert("Inquiry sent successfully!");
+          } else {
+              const err = await res.json();
+              alert("Error: " + (err.message || "Could not send inquiry."));
+          }
+      } catch (err) {
+          console.error("Inquiry Error", err);
+          alert("Unexpected error. Please try again.");
+      }
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="js/script.js"></script>
 </body>
 </html>

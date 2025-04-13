@@ -3,23 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Shop Name</title> <!-- Added proper title -->
+  <meta name="description" content="Your shop description"> <!-- SEO meta -->
+  
+  <!-- CSS Links -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <link rel="stylesheet" href="assets/css/style.css">
-  <title>Document</title>
+  
+  <!-- Preload important resources -->
+  <link rel="preload" href="assets/css/style.css" as="style">
 </head>
 <body>
+  <!-- Main Content Structure -->
+  <header id="navbar"></header> <!-- Semantic HTML -->
   
-  <div id="navbar"></div>
-  <div id="hero"></div>
-  <div id="shop"></div>
-  <div id="staticShot">
-    <div id="products" class="row"></div>
-  </div>
-  <div id="footer"></div>
+  <main> <!-- Wrapped main content -->
+    <section id="hero"></section> <!-- Semantic section -->
+    <section id="shop"></section>
+    <section id="products-section" class="container py-5"> <!-- Added container class -->
+      <div id="products" class="row g-4"></div> <!-- Added grid gap -->
+    </section>
+  </main>
+  
+  <footer id="footer"></footer> <!-- Semantic footer -->
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="js/app.js"></script>
-  <script type="module" src="js/script.js"></script>
+  <!-- JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+  <script src="js/app.js" defer></script>
+  <script type="module" src="js/script.js" defer></script> <!-- Added defer -->
 </body>
 </html>
