@@ -40,17 +40,32 @@ const checkAuth = async () => {
   try {
     const response = await fetch('/api/auth/me', { credentials: 'include' });
     if (response.ok) {
-      print(response.text)
       const user = await response.json();
       return user;
     }
-    print(response.text)
     return null;
   } catch (err) {
     console.error('Auth check failed:', err);
     return null;
   }
 };
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const authUser = await checkAuth();
+
+  const authButtons = document.getElementById('auth-buttons');
+  const userInfo = document.getElementById('user-info');
+  if (authUser) {
+    // Logged in
+    if (authButtons) authButtons.classList.add('d-none');
+    if (userInfo) userInfo.classList.remove('d-none');
+  } else {
+    // Not logged in
+    if (authButtons) authButtons.classList.remove('d-none');
+    if (userInfo) userInfo.classList.add('d-none');
+  }
+});
+
 
 // Update UI based on login status
 const updateAuthUI = async () => {

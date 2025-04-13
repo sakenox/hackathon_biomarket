@@ -64,7 +64,7 @@ export function getShopHero() {
             <div class="hero-content">
               <h2 class="fw-bold display-5">100% Fresh<br>Fruit & Vegetables</h2>
               <p class="text-muted">Free shipping on all your order. we deliver, you enjoy</p>
-              <a href="#" class="btn btn-success rounded-pill px-4 py-2 mt-2">Shop Now</a>
+              <a href="/search.html" class="btn btn-success rounded-pill px-4 py-2 mt-2">Shop Now</a>
             </div>
             <img src="../assets/images/fruit.png" alt="Vegetables" class="hero-bg-image">
             <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-3 rounded-pill px-3 py-2">
@@ -81,7 +81,7 @@ export function getShopHero() {
               <h6 class="fw-bold text-warning">20% OFF</h6>
               <h5 class="fw-bold">Fresh Orange</h5>
               <p class="text-muted">Starting at <strong>$9.00</strong></p>
-              <a href="#" class="btn btn-success btn-sm rounded-pill px-3 py-1">Shop Now</a>
+              <a href="/search.html" class="btn btn-success btn-sm rounded-pill px-3 py-1">Shop Now</a>
             </div>
             <img src="../assets/images/orange.png" alt="Oranges" class="small-card-bg">
           </div>
@@ -91,7 +91,7 @@ export function getShopHero() {
             <div class="small-card-content">
               <h6 class="fw-bold text-success">Best Deal</h6>
               <h5 class="fw-bold">Healthy Coconuts</h5>
-              <a href="#" class="btn btn-outline-light btn-sm rounded-pill mt-2 px-3 py-1">Shop Now</a>
+              <a href="/search.html" class="btn btn-outline-light btn-sm rounded-pill mt-2 px-3 py-1">Shop Now</a>
             </div>
             <img src="../assets/images/coconut.png" alt="Coconut" class="small-card-bg">
           </div>

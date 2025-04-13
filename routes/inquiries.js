@@ -89,7 +89,7 @@ router.patch('/:id', authUser, async (req, res) => {
     const { id } = req.params;
     const { status } = req.body;
   
-    const validStatuses = ['accepted', 'rejected', 'cancelled'];
+    const validStatuses = ['pending', 'accepted', 'rejected', 'completed', 'cancelled'];
     if (!validStatuses.includes(status)) {
       return res.status(400).json({ message: 'Invalid status value' });
     }
@@ -102,13 +102,17 @@ router.patch('/:id', authUser, async (req, res) => {
       // Permissions check
       const isFarmer = req.session.userType === 'farmer';
       const isUser = req.session.userType === 'user';
+      const isAdmin = req.session.userType === 'admin';
+
   
-      if (isFarmer && order.farmer.toString() !== req.session.userId) {
-        return res.status(403).json({ message: 'Unauthorized' });
-      }
-  
-      if (isUser && order.user.toString() !== req.session.userId) {
-        return res.status(403).json({ message: 'Unauthorized' });
+      if (!isAdmin){
+        if (isFarmer && order.farmer.toString() !== req.session.userId) {
+          return res.status(403).json({ message: 'Unauthorized' });
+        }
+    
+        if (isUser && order.user.toString() !== req.session.userId) {
+          return res.status(403).json({ message: 'Unauthorized' });
+        }
       }
   
       order.status = status;

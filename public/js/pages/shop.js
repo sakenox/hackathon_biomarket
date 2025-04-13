@@ -82,14 +82,16 @@ export function getShopHome(categories, products) {
         ${categories
           .map(
             (cat) => `
-            <div class="col-6 col-md-4 col-lg-3">
-              <div class="image-card category-card ${cat.isActive ? 'active-category' : ''}" 
-                   style="background-image: url('${cat.image}')">
-                <div class="image-card-content">
-                  <p class="fw-semibold mb-0">${cat.title}</p>
+              <div class="col-6 col-md-4 col-lg-3">
+              <a href="/search.html?category=${cat.short}">
+                <div class="image-card category-card ${cat.isActive ? 'active-category' : ''}" 
+                    style="background-image: url('${cat.image}')">
+                  <div class="image-card-content">
+                    <p class="fw-semibold mb-0">${cat.title}</p>
+                  </div>
                 </div>
+                </a>
               </div>
-            </div>
           `
           )
           .join('')}

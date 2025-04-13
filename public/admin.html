@@ -48,6 +48,23 @@
   <div class="container">
     <h1 class="text-center mb-5">Admin Panel</h1>
 
+      <!-- Dashboard Stats -->
+      <div class="panel-section">
+        <h2>Dashboard Analytics</h2>
+        <div class="row g-4 text-center mt-3">
+          <div class="col-md-3"><h5>Total Users</h5><p id="stat-users">...</p></div>
+          <div class="col-md-3"><h5>Total Products</h5><p id="stat-products">...</p></div>
+          <div class="col-md-3"><h5>Avg Inquiries / Farmer</h5><p id="stat-avginq">...</p></div>
+          <div class="col-md-3"><h5>Total Inquiries</h5><p id="stat-inquiries">...</p></div>
+        </div>
+
+        <div class="mt-4">
+          <h4>Top Farmers</h4>
+          <p><strong>Most Inquired:</strong> <span id="stat-mostinquired">...</span></p>
+          <p><strong>Highest Rated:</strong> <span id="stat-toprated">...</span></p>
+        </div>
+      </div>
+
     <!-- User Management -->
     <div class="panel-section">
       <h2>Manage Users</h2>
@@ -76,6 +93,14 @@
             <option value="">Select City</option>
             <option value="Tirana">Tirana</option>
             <option value="Durrës">Durrës</option>
+            <option value="Vlorë">Vlorë</option>
+            <option value="Shkodër">Shkodër</option>
+            <option value="Elbasan">Elbasan</option>
+            <option value="Korçë">Korçë</option>
+            <option value="Fier">Fier</option>
+            <option value="Berat">Berat</option>
+            <option value="Lushnjë">Lushnjë</option>
+            <option value="Pogradec">Pogradec</option>
           </select>
         </div>
         <div class="col-md-3">
@@ -98,10 +123,18 @@
       </table>
     </div>
 
+ 
+
     <!-- Product Management -->
     <div class="panel-section">
       <h2>Manage Products</h2>
       <form id="product-form" class="row g-3 align-items-end">
+        <div class="col-md-4">
+          <select class="form-select" id="product-farmer">
+            <option value="">Select Farmer</option>
+            <!-- Options populated dynamically -->
+          </select>
+        </div>
         <div class="col-md-4">
           <input type="text" class="form-control" id="product-title" placeholder="Title" required>
         </div>
@@ -136,6 +169,7 @@
         <thead>
           <tr>
             <th>Title</th>
+            <th>Farmer</th>
             <th>Category</th>
             <th>Price</th>
             <th>Unit</th>
@@ -146,7 +180,75 @@
         </tbody>
       </table>
     </div>
+
+
+    <!-- Inquiry Management -->
+    <div class="panel-section">
+      <h2>Manage Inquiries</h2>
+      <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>From User</th>
+            <th>To Farmer</th>
+            <th>Quantity</th>
+            <th>Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody id="inquiry-table-body"></tbody>
+      </table>
+    </div>
   </div>
+  <div class="modal fade" id="editUserModal">
+    <div class="modal-dialog">
+      <form id="editUserForm" class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit User</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="editUserId" />
+          <div class="mb-3">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="editUserFullName" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Phone</label>
+            <input type="text" class="form-control" id="editUserPhone" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">City</label>
+            <select id="editUserCity" class="form-select">
+              <option value="">Select City</option>
+              <option value="Tirana">Tirana</option>
+              <option value="Durrës">Durrës</option>
+              <option value="Vlorë">Vlorë</option>
+              <option value="Shkodër">Shkodër</option>
+              <option value="Elbasan">Elbasan</option>
+              <option value="Korçë">Korçë</option>
+              <option value="Fier">Fier</option>
+              <option value="Berat">Berat</option>
+              <option value="Lushnjë">Lushnjë</option>
+              <option value="Pogradec">Pogradec</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Type</label>
+            <select id="editUserType" class="form-select">
+              <option value="user">User</option>
+              <option value="farmer">Farmer</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
   <div id="footer"></div>
 
   <script>
@@ -155,7 +257,11 @@
     function loadUsers() {
       fetch(apiBaseUrl + 'users')
         .then(response => response.json())
-        .then(displayUsers);
+        .then(users => {
+          displayUsers(users);
+          populateFarmerDropdown(users);
+        })
+
     }
 
     function loadProducts() {
@@ -175,6 +281,7 @@
           <td>${user.type}</td>
           <td>${user.city || 'N/A'}</td>
           <td>
+            <button class="btn btn-warning btn-sm me-1 edit-user" data-id="${user._id}">Edit</button>
             <button class="btn btn-danger btn-sm" onclick="deleteUser('${user._id}')">Delete</button>
           </td>
         `;
@@ -189,6 +296,7 @@
         const row = document.createElement('tr');
         row.innerHTML = `
           <td>${product.title}</td>
+          <td>${product.farmerId.fullName}</td>
           <td>${product.category}</td>
           <td>${product.price}</td>
           <td>${product.unit}</td>
@@ -202,6 +310,7 @@
 
     document.getElementById('user-form').addEventListener('submit', function (event) {
       event.preventDefault();
+
       const user = {
         email: document.getElementById('user-email').value,
         password: document.getElementById('user-password').value,
@@ -219,13 +328,22 @@
 
     document.getElementById('product-form').addEventListener('submit', function (event) {
       event.preventDefault();
+
+      const farmerId = document.getElementById('product-farmer').value;
+
+      if (!farmerId) {
+        alert("Please select a farmer.");
+        return;
+      }
       const product = {
         title: document.getElementById('product-title').value,
         description: document.getElementById('product-description').value,
         category: document.getElementById('product-category').value,
         price: parseFloat(document.getElementById('product-price').value),
-        unit: document.getElementById('product-unit').value
+        unit: document.getElementById('product-unit').value,
+        farmerId
       };
+
       fetch(apiBaseUrl + 'products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -243,9 +361,149 @@
         .then(() => loadProducts());
     }
 
+    function loadStats() {
+      fetch(apiBaseUrl + 'stats')
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('stat-users').textContent = data.totalUsers;
+          document.getElementById('stat-products').textContent = data.totalProducts;
+          document.getElementById('stat-avginq').textContent = data.avgInquiriesPerFarmer.toFixed(2);
+          document.getElementById('stat-inquiries').textContent = data.totalInquiries;
+
+          document.getElementById('stat-mostinquired').textContent = data.mostInquired?.farmer?.fullName || 'N/A';
+          document.getElementById('stat-toprated').textContent = data.topRated?.farmer?.fullName || 'N/A';
+        });
+    }
+
+    function loadInquiries() {
+      fetch(apiBaseUrl + 'inquiries')
+        .then(res => res.json())
+        .then(displayInquiries);
+    }
+
+    function displayInquiries(inquiries) {
+      const tbody = document.getElementById('inquiry-table-body');
+      tbody.innerHTML = '';
+
+      inquiries.forEach(inq => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${inq.product?.title || 'N/A'}</td>
+          <td>${inq.user?.fullName || 'N/A'} (${inq.user?.email})</td>
+          <td>${inq.farmer?.fullName || 'N/A'} (${inq.farmer?.email})</td>
+          <td>${inq.quantity}</td>
+          <td>
+            <select class="form-select form-select-sm inquiry-status" data-id="${inq._id}">
+              ${['pending', 'accepted', 'rejected', 'completed', 'cancelled'].map(statusOpt => `
+                <option value="${statusOpt}" ${statusOpt === inq.status ? 'selected' : ''}>${statusOpt}</option>
+              `).join('')}
+            </select>
+          </td>
+          <td>${new Date(inq.createdAt).toLocaleString()}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function populateFarmerDropdown(users) {
+      const dropdown = document.getElementById('product-farmer');
+      dropdown.innerHTML = '<option value="">Select Farmer</option>';
+      
+      users
+        .filter(user => user.type === 'farmer')
+        .forEach(farmer => {
+          const option = document.createElement('option');
+          option.value = farmer._id;
+          option.textContent = farmer.fullName + ' - ' + farmer.email;
+          dropdown.appendChild(option);
+        });
+    }
+
+
+
     loadUsers();
     loadProducts();
+    loadStats();
+    loadInquiries();
+    let userModalInstance = null;
+    document.addEventListener('DOMContentLoaded', () => {
+      userModalInstance = new bootstrap.Modal(document.getElementById('editUserModal'));
+
+   });
+
+
+    document.addEventListener('click', async (e) => {
+      if (e.target.classList.contains('edit-user')) {
+        const userId = e.target.dataset.id;
+        try {
+          const res = await fetch(`/api/admin/users/${userId}`);
+          const user = await res.json();
+
+          document.getElementById('editUserId').value = user._id;
+          document.getElementById('editUserFullName').value = user.fullName;
+          document.getElementById('editUserPhone').value = user.phone || '';
+          document.getElementById('editUserCity').value = user.city || '';
+          document.getElementById('editUserType').value = user.type;
+
+          userModalInstance.show();
+        } catch (err) {
+          alert('Failed to load user data');
+        }
+      }
+    });
+
+    document.getElementById('editUserForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const userId = document.getElementById('editUserId').value;
+      const updatedUser = {
+        fullName: document.getElementById('editUserFullName').value,
+        phone: document.getElementById('editUserPhone').value,
+        city: document.getElementById('editUserCity').value,
+        type: document.getElementById('editUserType').value
+      };
+
+      try {
+        const res = await fetch(`/api/admin/users/${userId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedUser)
+        });
+
+        if (res.ok) {
+          userModalInstance.hide();
+          loadUsers(); // Refresh user list
+        } else {
+          throw new Error('Update failed');
+        }
+      } catch (err) {
+        alert(err.message);
+      }
+    });
+
+    document.addEventListener('change', async (e) => {
+      if (e.target.classList.contains('inquiry-status')) {
+        const newStatus = e.target.value;
+        const inquiryId = e.target.dataset.id;
+        try {
+          const res = await fetch(`/api/inquiries/${inquiryId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: newStatus })
+          });
+
+          if (!res.ok) {
+            alert('Failed to update status');
+          }
+        } catch (err) {
+          console.error(err);
+          alert('Error updating status');
+        }
+      }
+    });
+
+
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
   <script type="module" src="js/script.js"></script>
 </body>
 </html>

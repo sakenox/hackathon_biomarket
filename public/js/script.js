@@ -11,12 +11,12 @@ import { sortProducts } from './utils/sort.js';
 // Data configuration
 const APP_DATA = {
   categories: [
-    { title: 'Fresh Fruit', image: '../assets/images/fruits.jpg' },
-    { title: 'Fresh Vegetables', image: '../assets/images/vegetables.png' },
-    { title: 'Meat & Fish', image: '../assets/images/meat.png' },
-    { title: 'Bakery', image: '../assets/images/bakery.png' },
-    { title: 'Dairy Products', image: '../assets/images/dairy.png' },
-    { title: 'Beverages', image: '../assets/images/beverages.png' }
+    { title: 'Fresh Fruit', image: '../assets/images/fruits.jpg', short: 'fruits' },
+    { title: 'Fresh Vegetables', image: '../assets/images/vegetables.png', short: 'vegetables' },
+    { title: 'Meat & Fish', image: '../assets/images/meat.png', short: 'meat' },
+    { title: 'Bakery', image: '../assets/images/bakery.png', short: 'grains' },
+    { title: 'Dairy Products', image: '../assets/images/dairy.png', short: 'dairy' },
+    { title: 'Beverages', image: '../assets/images/beverages.png', short: 'other' }
   ],
   
   products: [
