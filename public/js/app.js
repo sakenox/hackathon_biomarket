@@ -52,9 +52,23 @@ const checkAuth = async () => {
 
 document.addEventListener('DOMContentLoaded', async () => {
   const authUser = await checkAuth();
-
+     
   const authButtons = document.getElementById('auth-buttons');
   const userInfo = document.getElementById('user-info');
+
+  const path = window.location.pathname;
+  console.log(path)
+
+  if (!authUser) {
+    if (path.includes('admin.html') || path.includes('dashboard')) {
+      window.location.href = '/login';
+    }
+  } else if (authUser.type != 'farmer' && path.includes('dashboard')) {
+    window.location.href = '/';
+  } else if (authUser.type != 'admin' && path.includes('admin.html')) {
+    window.location.href = '/';
+  }
+
   if (authUser) {
     // Logged in
     if (authButtons) authButtons.classList.add('d-none');

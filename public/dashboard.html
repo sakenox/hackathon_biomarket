@@ -54,78 +54,7 @@
 <body>
 
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg bg-white shadow-sm">
-    <div class="container">
-      <a class="navbar-brand fw-bold text-success" href="#">
-        <i class="bi bi-emoji-smile me-2"></i>Merr Bio
-      </a>
-
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto gap-3">
-          <li class="nav-item"><a class="nav-link text-success fw-semibold" href="/">Home</a></li>
-          <li class="nav-item"><a class="nav-link fw-semibold" href="/search.html">Shop</a></li>
-          <li class="nav-item"><a class="nav-link fw-semibold" href="/">About Us</a></li>
-          <li class="nav-item"><a class="nav-link fw-semibold" href="/">Contact Us</a></li>
-        </ul>
-
-        <!-- Search Bar -->
-        <form class="position-relative me-3" id="navbar-search-form">
-          <div class="d-flex search-container">
-            <div class="dropdown">
-              <button class="btn bg-white border-0 search-filter-btn px-3" type="button" data-bs-toggle="dropdown">
-                <i class="bi bi-funnel-fill text-secondary"></i>
-              </button>
-              <div class="dropdown-menu p-3 shadow-lg" style="width: 250px;">
-                <strong class="d-block mb-2">Categories</strong>
-                ${['Dairy','Meat','Fruit','Vegetables','Grains', 'Other'].map(cat => `
-                  <div class="form-check">
-                    <input class="form-check-input category-check" type="checkbox" id="cat-${cat.toLowerCase()}" value="${cat.toLowerCase()}">
-                    <label class="form-check-label" for="cat-${cat.toLowerCase()}">${cat}</label>
-                  </div>`).join('')}
-                <hr>
-                <div class="form-check form-switch">
-                  <input class="form-check-input" type="checkbox" id="inStock">
-                  <label class="form-check-label" for="inStock">In Stock</label>
-                </div>
-                <hr>
-                <label class="form-label" for="search-city">City</label>
-                <select class="form-select" id="search-city">
-                  <option value="">Select City</option>
-                  ${[
-                    "Tirana", "Durres", "Shkoder", "Vlore", "Elbasan", 
-                    "Korce", "Fier", "Berat", "Kukes", "Gjirokaster"
-                  ].map(city => `<option value="${city}">${city}</option>`).join('')}
-                </select>
-              </div>
-            </div>
-        
-            <input type="text" id="navbar-search-input" class="form-control search-input border-0" placeholder="Search...">
-        
-            <button class="btn bg-white border-0 search-submit-btn px-3" type="submit">
-              <i class="bi bi-search text-success"></i>
-            </button>
-          </div>
-        </form>
-
-        <select class="form-select w-auto me-3 border-0 text-success fw-semibold">
-          <option selected>English</option>
-          <option>Shqip</option>
-        </select>
-
-        <a href="/inquiries.html" class="text-success fw-semibold me-3 d-flex align-items-center text-decoration-none">
-          <i class="bi bi-envelope-fill me-1"></i> Inquiries
-        </a>
-
-        <button class="btn btn-success text-white fw-semibold rounded-pill px-3" id="logoutButton">
-          <i class="bi bi-box-arrow-right me-1"></i> Logout
-        </button>        
-      </div>
-    </div>
-  </nav>
+  <header id="navbar"></header>
 
   <!-- Main Content -->
   <div class="container my-5">
