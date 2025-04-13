@@ -112,7 +112,7 @@ export function getNavbar() {
           </div>
           <div class="d-flex align-items-center gap-3 d-none" id="user-info">
             <span class="fw-semibold text-success" id="user-greeting"></span>
-            <button class="btn btn-danger btn-sm rounded-pill px-3" id="logoutButton" onclick="logout()">Logout</button>
+            <button class="btn btn-success text-white fw-semibold rounded-pill px-3" id="logoutButton" onclick="logout()">Logout</button>
           </div>
         </div>
       </div>

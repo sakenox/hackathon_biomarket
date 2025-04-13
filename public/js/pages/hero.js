@@ -22,7 +22,7 @@ export function getShopHero() {
         height: 100%;
         width: 50%;
         object-fit: cover;
-        z-index: 1;
+        z-index: 0;
         opacity: 0.8;
       }
       
@@ -36,7 +36,7 @@ export function getShopHero() {
       
       .small-card-content {
         position: relative;
-        z-index: 2;
+        z-index: 0;
       }
       
       .small-card-bg {
@@ -46,7 +46,7 @@ export function getShopHero() {
         height: 100%;
         width: 50%;
         object-fit: cover;
-        z-index: 1;
+        z-index: 0;
         opacity: 0.8;
       }
       
