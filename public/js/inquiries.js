@@ -119,7 +119,7 @@ async function loadFarmers() {
     }
   } catch (err) {
     console.error("Error loading farmers:", err);
-    alert("Failed to load farmers.");
+    //alert("Failed to load farmers.");
   }
 }
 

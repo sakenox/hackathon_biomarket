@@ -60,8 +60,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   console.log(path)
 
   if (!authUser) {
-    if (path.includes('admin.html') || path.includes('dashboard')) {
-      window.location.href = '/login';
+    if (path.includes('admin.html') || path.includes('dashboard') || path.includes('inquiries')) {
+      window.location.href = '/login.html';
     }
   } else if (authUser.type != 'farmer' && path.includes('dashboard')) {
     window.location.href = '/';
